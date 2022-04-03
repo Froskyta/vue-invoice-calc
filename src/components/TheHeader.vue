@@ -54,29 +54,35 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import VueComponent from 'vue';
 import { mapState } from 'vuex';
-import { IInvoiceCreate } from '../models/invoice';
+import { IInvoiceCreate, IInvoicePreview } from '../models/invoice';
 
-export default Vue.extend({
+declare module 'vue/types/vue' {
+  interface Vue {
+    modelRecord: IInvoiceCreate;
+  }
+}
+
+export default VueComponent.extend({
   name: 'TheHeader',
   data() {
     return {
       modelRecord: {
         productName: '',
-        price: '',
-        quantity: '',
-      } as IInvoiceCreate,
+        price: 0,
+        quantity: 0,
+      },
     };
   },
   computed: {
     ...mapState(['invoices']),
     allSelectModel: {
       get() {
-        return !(this.invoices.some((invoice) => !invoice.checked));
+        return !(this.invoices.some((invoice: IInvoicePreview) => !invoice.checked));
       },
-      set(value) {
-        this.invoices.forEach((invoice) => {
+      set(value: boolean) {
+        this.invoices.forEach((invoice: IInvoicePreview) => {
           this.$invoiceService.selectedInvoice(invoice.id, value);
         });
       },

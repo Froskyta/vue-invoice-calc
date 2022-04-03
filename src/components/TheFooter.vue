@@ -15,15 +15,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapState } from 'vuex';
+import { IInvoicePreview } from '../models/invoice';
 
 export default Vue.extend({
   name: 'TheFooter',
   computed: {
     ...mapState(['invoices']),
     totalSum() {
-      const list = this.invoices.map((invoice) => invoice.sum);
+      const list = this.invoices.map((invoice: IInvoicePreview) => invoice.sum);
       if (!list.length) return 0;
-      return list.reduce((a, b) => a + b);
+      return list.reduce((a:number, b:number) => a + b);
     },
   },
 });
