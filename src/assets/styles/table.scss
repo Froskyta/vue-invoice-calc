@@ -1,0 +1,9 @@
+.table-cascade {
+  display: grid;
+  grid-template-columns:
+      minmax(50px, 150px)
+      auto
+      minmax(50px, 300px)
+      minmax(50px, 150px)
+      minmax(50px, 300px);
+}

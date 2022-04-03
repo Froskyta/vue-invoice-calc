@@ -32,6 +32,7 @@ export default class InvoiceCalculatorService implements IInvoiceCalculatorServi
     const modelForRecord: IInvoicePreview = {
       id: this.generator.getIdFromExclusion(invoices.map(({ id }) => id)),
       checked: this.defaultStatusCheckedInvoice,
+      sum: model.price * model.quantity,
       ...model,
     };
 
@@ -39,7 +40,10 @@ export default class InvoiceCalculatorService implements IInvoiceCalculatorServi
     this.$store.commit('addInvoice', modelForRecord);
 
     // Set record in browser storage
-    this.browserStorage.setData<IInvoicePreview[]>(this.defaultNameStateInvoices, invoices);
+    this.browserStorage.setData<IInvoicePreview[]>(
+      this.defaultNameStateInvoices,
+      this.$store.state.invoices,
+    );
   }
 
   /**
@@ -54,6 +58,12 @@ export default class InvoiceCalculatorService implements IInvoiceCalculatorServi
 
     // Delete record from invoices list
     this.$store.commit('deleteInvoiceByIndex', indexInvoice);
+
+    // Set invoices list in browser storage
+    this.browserStorage.setData<IInvoicePreview[]>(
+      this.defaultNameStateInvoices,
+      this.$store.state.invoices,
+    );
   }
 
   /**
@@ -63,12 +73,50 @@ export default class InvoiceCalculatorService implements IInvoiceCalculatorServi
     const { invoices } = this.$store.state;
 
     // Delete all record by status checked true
-    this.$store.commit('setInvoices', invoices.filter((invoice) => invoice.checked));
+    this.$store.commit('setInvoices', invoices.filter((invoice) => !invoice.checked));
 
     // Set invoices list in browser storage
     this.browserStorage.setData<IInvoicePreview[]>(
       this.defaultNameStateInvoices,
       this.$store.state.invoices,
     );
+  }
+
+  /**
+   * Set status selected Invoice
+   * @param id
+   * @param status
+   */
+  selectedInvoice(id: number, status?: boolean): void | Error {
+    const { invoices } = this.$store.state;
+
+    // Get index record by ID
+    const indexInvoice = invoices.findIndex((invoice) => invoice.id === id);
+
+    // Set new Status Checked
+    this.$store.commit('setStatusSelected', {
+      index: indexInvoice,
+      status,
+    });
+
+    // Set invoices list in browser storage
+    this.browserStorage.setData<IInvoicePreview[]>(
+      this.defaultNameStateInvoices,
+      this.$store.state.invoices,
+    );
+  }
+
+  /**
+   * Get and Set in store all Invoices from Browser Storage
+   */
+  getInvoicesFromBrowserStorage(): void | Error {
+    // Get from Browser Storage
+    const response = this.browserStorage.getData<IInvoicePreview[]>(this.defaultNameStateInvoices);
+
+    // Stop if list empty
+    if (!response?.length) return;
+
+    // Set list in Store
+    this.$store.commit('setInvoices', response);
   }
 }

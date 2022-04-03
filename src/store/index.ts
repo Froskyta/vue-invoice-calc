@@ -22,8 +22,12 @@ export default new Vuex.Store({
       state.invoices.splice(index, 1);
     },
     setInvoices(state: StateT, invoices: IInvoicePreview[]) {
-      console.log('invoices ', invoices);
       Vue.set(state, 'invoices', invoices);
+    },
+    setStatusSelected(state: StateT, data: { index: number, status?: boolean }) {
+      state.invoices[data.index].checked = data.status !== undefined
+        ? data.status
+        : !state.invoices[data.index].checked;
     },
   },
   actions: {
