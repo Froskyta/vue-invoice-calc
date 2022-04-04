@@ -15,16 +15,16 @@ export default new Vuex.Store({
   getters: {
   },
   mutations: {
-    addInvoice(state: StateT, model: IInvoicePreview) {
+    addInvoice(state: StateT, model: IInvoicePreview): void {
       state.invoices.push(model);
     },
-    deleteInvoiceByIndex(state: StateT, index: number) {
+    deleteInvoiceByIndex(state: StateT, index: number): void {
       state.invoices.splice(index, 1);
     },
-    setInvoices(state: StateT, invoices: IInvoicePreview[]) {
+    setInvoices(state: StateT, invoices: IInvoicePreview[]): void {
       Vue.set(state, 'invoices', invoices);
     },
-    setStatusSelected(state: StateT, data: { index: number, status?: boolean }) {
+    setStatusSelected(state: StateT, data: { index: number, status?: boolean }): void {
       state.invoices[data.index].checked = data.status !== undefined
         ? data.status
         : !state.invoices[data.index].checked;

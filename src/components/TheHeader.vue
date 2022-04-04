@@ -78,7 +78,7 @@ export default VueComponent.extend({
   computed: {
     ...mapState(['invoices']),
     allSelectModel: {
-      get() {
+      get():boolean {
         return !(this.invoices.some((invoice: IInvoicePreview) => !invoice.checked));
       },
       set(value: boolean) {

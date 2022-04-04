@@ -21,7 +21,7 @@ export default Vue.extend({
   name: 'TheFooter',
   computed: {
     ...mapState(['invoices']),
-    totalSum() {
+    totalSum():number {
       const list = this.invoices.map((invoice: IInvoicePreview) => invoice.sum);
       if (!list.length) return 0;
       return list.reduce((a:number, b:number) => a + b);

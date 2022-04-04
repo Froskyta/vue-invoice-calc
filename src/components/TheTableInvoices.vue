@@ -40,7 +40,7 @@ export default Vue.extend({
   name: 'TheTableInvoices',
   computed: {
     ...mapState(['invoices']),
-    fieldsInvoices() {
+    fieldsInvoices():Array<{ title: string, key: string }> {
       return [
         {
           title: 'Checked',
